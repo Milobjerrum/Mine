@@ -1,0 +1,30 @@
+.gray_bttn {
+  background-color: #f8f9fa;
+  font-family: arial, sans-serif;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  border: 1px solid #f8f9fa; }
+
+.gray_bttn:hover {
+  border: 1px solid #202124; }
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  padding: 30px; }
+
+h1 {
+  text-align: center;
+  font-size: xx-large;
+  font-family: arial, sans-serif; }
+
+.goglefy {
+  line-height: 20px;
+  width: 300px;
+  border: 1px solid #202124;
+  font-size: 14px;
+  border-radius: 20px;
+  padding: 10px 16px; }
+
+/*# sourceMappingURL=styles.css.map */
