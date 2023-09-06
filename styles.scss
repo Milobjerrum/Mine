@@ -1,14 +1,89 @@
-$background: #fff;
-$color: #202124;
-$border_light: #f8f9fa;
-$border_dark: #202124;
-$bttn_color: #f8f9fa;
+// Basics
 $font: arial,sans-serif;
 
-.gray_bttn {
-    background-color: $bttn_color;
+$background: #fff;
+$color: #202124;
+$light_text: white;
+
+// button colors
+// regular gray one
+$border_light: #f8f9fa;
+$border_dark: #202124;
+$light_bttn: #f8f9fa;
+$blue_bttn: #4d90fe;
+
+body {
+    color: $color;
+    background-color: $background;
     font-family: $font;
     font-size: 14px;
+}
+
+.flex-container {
+    display: flex;
+    position: absolute;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+
+h1 {
+    text-align: center;
+    font-size: xx-large;
+}
+
+.searchbar {
+    line-height: 20px;
+    width: 300px;
+    border: 1px solid $border_dark;
+    border-radius: 20px;
+    padding: 10px 16px;
+}
+
+.header_nav {
+    text-align: right;
+    padding: 30px;
+    color: $color;
+
+}
+
+.advanced {
+    text-align: left;
+    table-layout: auto;
+    border-bottom: 1px solid $border_dark;
+}
+
+.advanced tr {
+    line-height: 50px;
+}
+
+.advanced input {
+    line-height: 30px;
+    width: 600px;
+    border: 1px solid $border_dark;
+}
+
+.advanced .t {
+    width: 250px;
+}
+
+
+.blue_bttn {
+    background-color: $blue_bttn;
+    color: $light_text;
+    padding: 10px 16px;
+    border-radius: 4px;
+    border: 1px solid $border_light;
+}
+
+.blue_bttn:hover {
+    border: 2px solid $border_dark;
+}
+
+.gray_bttn {
+    background-color: $light_bttn;
     padding: 10px 16px;
     border-radius: 4px;
     border: 1px solid $border_light;
@@ -16,34 +91,4 @@ $font: arial,sans-serif;
 
 .gray_bttn:hover {
     border: 1px solid $border_dark;
-}
-
-
-.flex-container {
-    display: flex;
-    justify-content: center;
-    padding: 30px;
-}
-
-
-h1 {
-    text-align: center;
-    font-size: xx-large;
-    font-family: $font;
-}
-
-.searchbar {
-    line-height: 20px;
-    width: 300px;
-    border: 1px solid $border_dark;
-    font-size: 14px;
-    border-radius: 20px;
-    padding: 10px 16px;
-}
-
-.header_nav {
-    text-align: right;
-    font-family: $font;
-    font-size: small;
-
 }
