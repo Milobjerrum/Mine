@@ -19,12 +19,17 @@ h1 {
   font-size: xx-large;
   font-family: arial, sans-serif; }
 
-.goglefy {
+.searchbar {
   line-height: 20px;
   width: 300px;
   border: 1px solid #202124;
   font-size: 14px;
   border-radius: 20px;
   padding: 10px 16px; }
+
+.header_nav {
+  text-align: right;
+  font-family: arial, sans-serif;
+  font-size: small; }
 
 /*# sourceMappingURL=styles.css.map */
