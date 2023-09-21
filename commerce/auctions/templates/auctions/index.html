@@ -2,6 +2,23 @@
 
 {% block body %}
     <h2>Active Listings</h2>
+    <table>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    <img scr="{{ item.image }}" alt="{{ item.title }}" width="100" hight="100"> 
+                </td>
+                <td> 
+                    <h3>{{ item.title }}</h3>
+                    <h6> Price: ${{ item.starting_bid }}</h6>
+                    <h6>Sold by: {{ item.seller }}</h6>
+                    <p> {{ item.description }}</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     TODO
 {% endblock %}

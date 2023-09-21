@@ -1,14 +1,20 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from datetime import datetime
+
+from .models import User, Listing
+from .forms import NewListingForm
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "items": Listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -61,3 +67,18 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+    
+@login_required
+def categories(request):
+    return render(request, "auctions/categories.html")
+
+
+@login_required
+def watchlist(request):
+    return render(request, "auctions/watchlist.html")
+
+
+@login_required
+def create(request):
+    """User can create a new listing"""
+
