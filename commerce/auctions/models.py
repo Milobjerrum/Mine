@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -9,12 +10,12 @@ class User(AbstractUser):
 
 class Listing(models.Model):
     """An item or listing """
-    title = models.CharField(max_length=50)
-    description = models.CharField(max_length=300, help_text=">Descripe your item")
-    image = models.URLField(help_text="Add a url with a image of your item")
+    title = models.CharField(max_length=150)
+    description = models.CharField(max_length=300, blank=True)
+    image = models.URLField(blank=True)
     starting_bid = models.DecimalField(max_digits=9, decimal_places=2)
-    seller = models.ForeignKey(User, on_delete=models.PROTECT, related_name="seller")
-    created = models.DateTimeField()
+    seller = models.ForeignKey(settings.AUT, on_delete=models.PROTECT, related_name="seller")
+    date_created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.title}:"
@@ -35,7 +36,7 @@ class Comments(models.Model):
     comment = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="user_comment")
     item = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name="item_comment")
-    date = models.DateTimeField()
+    date_comment = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.comment}"

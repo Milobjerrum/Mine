@@ -81,4 +81,12 @@ def watchlist(request):
 @login_required
 def create(request):
     """User can create a new listing"""
+    if request.method == "POST":
+        form = NewListingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("index"))
 
+    return render(request, "auctions/create.html", {
+        "form": NewListingForm()
+    })

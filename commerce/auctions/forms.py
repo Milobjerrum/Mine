@@ -12,4 +12,4 @@ class NewListingForm(forms.ModelForm):
             "image", 
             "starting_bid", 
         ]
-
+        
