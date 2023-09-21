@@ -68,6 +68,16 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
     
+
+@login_required
+def listing(request, listing_id):
+    """see al detalies of each listing"""
+    item = Listing.objects.get(pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "item": item
+    })
+
+
 @login_required
 def categories(request):
     return render(request, "auctions/categories.html")
@@ -84,6 +94,7 @@ def create(request):
     if request.method == "POST":
         form = NewListingForm(request.POST)
         if form.is_valid():
+            form.instance.seller = request.user
             form.save()
             return HttpResponseRedirect(reverse("index"))
 

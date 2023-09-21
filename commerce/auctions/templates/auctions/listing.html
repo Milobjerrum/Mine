@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} Categories {% endblock %}
+
+{% block body %}
+<div>
+    <div> <img scr="{{ item.image }}" alt="{{ item.title }}"></div>
+    <div> 
+        <h1> {{ item.title }}</h1>
+        <h3> {{ item.description }}</h3>
+    </div>
+</div>
+{% endblock %}
