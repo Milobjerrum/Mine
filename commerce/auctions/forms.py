@@ -1,8 +1,8 @@
-from django import forms
-from .models import Listing#, Bids, Comments
+from django.forms import ModelForm
+from .models import Listing, Comments
 
 
-class NewListingForm(forms.ModelForm):
+class NewListingForm(ModelForm):
     """Django form for new listing"""
     class Meta:
         model = Listing
@@ -12,4 +12,14 @@ class NewListingForm(forms.ModelForm):
             "image", 
             "starting_bid", 
         ]
-        
+
+class CommentsForm(ModelForm):
+    """Comments on items"""
+    class Meta:
+        model = Comments
+        fields = [
+            "comment"
+        ]
+        labels = {
+            "comment": ""
+        }

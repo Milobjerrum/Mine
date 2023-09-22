@@ -5,20 +5,22 @@
     <table>
         <tbody>
             {% for item in items %}
-            <tr>
+            <tr> 
                 <td>
                     <img scr="{{ item.image }}" alt="{{ item.title }}" width="100" hight="100"> 
                 </td>
                 <td> 
-                    <a href="{% url 'listing' item.id %}"> <h3>{{ item.title }}</h3> </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'listing' item.pk %}"> <h3>{{ item.title }}</h3> </a>
+                    {% else %}
+                    <h3>{{ item.title }}</h3> 
+                    {% endif %}
                     <h6> Price: ${{ item.starting_bid }}</h6>
-                    <h6>Sold by: {{ item.seller }}</h6>
                     <p> {{ item.description }}</p>
+                    <p> {{ item.date_created }} </p>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    TODO
 {% endblock %}

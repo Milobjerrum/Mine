@@ -4,10 +4,37 @@
 
 {% block body %}
 <div>
+    <div>
+        <form action="{% url 'watch' item.pk %}", method="post">
+            {% csrf_token %}
+            {% if is_watching %}
+            <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
+            {% else %}
+            <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-primary btn-sm">Watch</button>
+            {% endif %}
+        </form>
+    </div>
     <div> <img scr="{{ item.image }}" alt="{{ item.title }}"></div>
     <div> 
         <h1> {{ item.title }}</h1>
         <h3> {{ item.description }}</h3>
+    </div>
+</div>
+<div>
+    <div class="show_comments">
+        <ul>
+        {% for comment in comments %}
+        <li> {{ comment }} </li>
+        {% empty %}
+        <li> No comments </li>
+        {% endfor %}
+    </div>
+    <div>
+        <form action="{% url 'listing' item.pk %}", method="post">
+            {% csrf_token %}
+            {{ new_comment }}
+            <input type="submit" class="btn-primary" Value="comment">
+        </form>
     </div>
 </div>
 {% endblock %}

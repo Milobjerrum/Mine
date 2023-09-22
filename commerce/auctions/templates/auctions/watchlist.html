@@ -3,4 +3,20 @@
 {% block title %} Watchlist {% endblock %}
 
 {% block body %}
+<h2>Wathclist</h2>
+<table>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>
+                <img scr="{{ item.image }}" alt="image failed">
+            </td>
+            <td>
+                <h2>{{ item.title }}</h2>
+                <p>{{ item.description }}</p>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

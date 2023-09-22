@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -17,6 +16,7 @@ class Listing(models.Model):
     starting_bid = models.DecimalField(max_digits=9, decimal_places=2)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")
     date_created = models.DateTimeField(default=timezone.now)
+    watch = models.ManyToManyField(User, related_name="watch")
 
     def __str__(self):
         return f"{self.title}"
@@ -27,6 +27,7 @@ class Bids(models.Model):
     amount = models.DecimalField(max_digits=9, decimal_places=2)
     item = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name="bids_item")
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="bids_user")
+    date_bid = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"${self.amount}"
@@ -40,7 +41,5 @@ class Comments(models.Model):
     date_comment = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.comment}"
+        return f"{self.user}: {self.comment}"
 
-""" TODO """
-# auction categories
