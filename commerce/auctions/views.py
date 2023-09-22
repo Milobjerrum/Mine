@@ -93,7 +93,6 @@ def listing(request, pk):
         "is_watching": is_watching
     })
 
-
 def watch(request, pk):
     """ Tracking if a user is watching a item"""
     item = get_object_or_404(Listing, id=request.POST.get("item_id"))
