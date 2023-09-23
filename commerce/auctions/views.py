@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from .models import User, Listing, Comments
 from .forms import NewListingForm, CommentsForm
+from . import util 
 
 
 def index(request):
@@ -72,42 +73,30 @@ def listing(request, pk):
     """see al detalies of each listing"""
 
     if request.method == "POST":
-        new_comment = CommentsForm(request.POST)
-        # adding the users comment, and saving user and item id to it. 
-        if new_comment.is_valid():
-            new_comment.instance.user = request.user
-            new_comment.instance.item_id = pk
-            new_comment.save()
-            return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
+        if "comment_form" in request.POST:
+            new_comment = CommentsForm(request.POST)
+            # adding the users comment, and saving user and item id to it. 
+            if new_comment.is_valid():
+                new_comment.instance.user = request.user
+                new_comment.instance.item_id = pk
+                new_comment.save()
+                return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
         
+        if "watch_form" in request.POST:
+            is_watching = util.watch_watching(request.user.id, pk)
 
-    watch_item = get_object_or_404(Listing, id=pk)
+    item = Listing.objects.get(pk=pk)
+
     is_watching = False
-    if watch_item.watch.filter(id=request.user.id).exists():
+    if item.watch.filter(id=request.user.id).exists():
         is_watching = True
 
     return render(request, "auctions/listing.html", {
-        "item": Listing.objects.get(pk=pk),
+        "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
         "is_watching": is_watching
     })
-
-def watch(request, pk):
-    """ Tracking if a user is watching a item"""
-    item = get_object_or_404(Listing, id=request.POST.get("item_id"))
-
-    is_watching = False
-    if item.watch.filter(id=request.user.id).exists():
-        item.watch.remove(request.user)
-        is_watching = False
-
-    else:
-        item.watch.add(request.user)
-        is_watching = True
-
-    return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
-
 
 
 @login_required
@@ -120,6 +109,7 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {
     "items": Listing.objects.filter(watch=request.user)
     })
+
 
 @login_required
 def create(request):

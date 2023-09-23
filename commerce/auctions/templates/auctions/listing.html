@@ -1,12 +1,14 @@
 {% extends "auctions/layout.html" %}
 
-{% block title %} Categories {% endblock %}
+{% block title %} Listing {% endblock %}
 
 {% block body %}
 <div>
     <div>
-        <form action="{% url 'watch' item.pk %}", method="post">
+        <h1> {{ path }}</h1>
+        <form action="{% url 'listing' item.pk %}", method="post">
             {% csrf_token %}
+            <input type="hidden" name="watch_form">
             {% if is_watching %}
             <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
             {% else %}
@@ -31,9 +33,10 @@
     </div>
     <div>
         <form action="{% url 'listing' item.pk %}", method="post">
+            <input type="hidden" name="comment_form"> 
             {% csrf_token %}
             {{ new_comment }}
-            <input type="submit" class="btn-primary" Value="comment">
+            <input type="submit" class="btn-primary" value="comment">
         </form>
     </div>
 </div>
