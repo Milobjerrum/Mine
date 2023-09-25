@@ -9,7 +9,7 @@
         <form action="{% url 'listing' item.pk %}", method="post">
             {% csrf_token %}
             <input type="hidden" name="watch_form">
-            {% if is_watching %}
+            {% if watching %}
             <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
             {% else %}
             <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-primary btn-sm">Watch</button>

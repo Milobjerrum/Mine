@@ -10,7 +10,7 @@ class NewListingForm(ModelForm):
             "title", 
             "description", 
             "image", 
-            "starting_bid", 
+            "price", 
         ]
 
 class CommentsForm(ModelForm):

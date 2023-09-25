@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from .models import User, Listing, Comments
 from .forms import NewListingForm, CommentsForm
-from . import util 
+
 
 
 def index(request):
@@ -71,31 +71,38 @@ def register(request):
 @login_required
 def listing(request, pk):
     """see al detalies of each listing"""
+    item = Listing.objects.get(pk=pk)
+    user = request.user
+
 
     if request.method == "POST":
+        # Handling the comments
         if "comment_form" in request.POST:
+            # Get users input aka the comment
             new_comment = CommentsForm(request.POST)
-            # adding the users comment, and saving user and item id to it. 
+            # Saving the comment with the user and item id's 
             if new_comment.is_valid():
                 new_comment.instance.user = request.user
                 new_comment.instance.item_id = pk
                 new_comment.save()
                 return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
-        
+
+        # Handeling the watch buttom
         if "watch_form" in request.POST:
-            is_watching = util.watch_watching(request.user.id, pk)
+            # the user is alredy watching when klicking then remove the user form the watchlist
+            if item.is_watching(user):
+                item.remove_from_watchlist(user)
+            else:
+                # User is not watching, add user to the watchlist
+                item.add_to_watchlist(user)
+            return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
 
-    item = Listing.objects.get(pk=pk)
-
-    is_watching = False
-    if item.watch.filter(id=request.user.id).exists():
-        is_watching = True
-
+    # Handling page view, and adds item informatin, comments, and the watching button
     return render(request, "auctions/listing.html", {
         "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
-        "is_watching": is_watching
+        "watching": item.is_watching(user)
     })
 
 
@@ -106,6 +113,7 @@ def categories(request):
 
 @login_required
 def watchlist(request):
+    """View alle items the user have on their watchlist"""
     return render(request, "auctions/watchlist.html", {
     "items": Listing.objects.filter(watch=request.user)
     })
@@ -118,8 +126,9 @@ def create(request):
         form = NewListingForm(request.POST)
         if form.is_valid():
             form.instance.seller = request.user
-            form.save()
-            return HttpResponseRedirect(reverse("index"))
+            new_listing = form.save()
+
+            return HttpResponseRedirect(reverse("listing", args=[str(new_listing.pk)]))
 
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
