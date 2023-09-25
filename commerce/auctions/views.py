@@ -102,7 +102,7 @@ def listing(request, pk):
         "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
-        "watching": item.is_watching(user)
+        "watching": item.is_watching(user),
     })
 
 
@@ -133,3 +133,4 @@ def create(request):
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
     })
+

@@ -26,7 +26,7 @@ class Listing(models.Model):
     category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE, related_name="category")
     date_created = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
-    watch = models.ManyToManyField(User, related_name="watchlist")
+    watch = models.ManyToManyField(User, blank=True, related_name="watchlist")
 
     
     def __str__(self):

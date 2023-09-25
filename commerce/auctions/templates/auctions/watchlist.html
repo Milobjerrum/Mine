@@ -4,19 +4,17 @@
 
 {% block body %}
 <h2>Wathclist</h2>
-<table>
-    <tbody>
-        {% for item in items %}
-        <tr>
-            <td>
-                <img scr="{{ item.image }}" alt="image failed">
-            </td>
-            <td>
-                <h2>{{ item.title }}</h2>
-                <p>{{ item.description }}</p>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row mx-3">
+    {% for item in items %}
+        <div class="card" style="width: 18rem;">
+            <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondaty">${{ item.price }}</h6>
+                <p class="card-text">{{ item.description }}</p>
+                <a href="{% url 'listing' item.pk %}" class="btn btn-primary btn-sm"> Detalies </a>
+            </div>
+            </div>
+    {% endfor %}
+</div>
 {% endblock %}
