@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from .models import Listing, Comments, Bids
 
@@ -58,9 +59,11 @@ class PlaceBidForm(forms.ModelForm):
     class Meta:
         model = Bids
         fields = ["bid"]
+
         widgets = {
-            "bid": forms.NumberInput(attrs={"class": "form-controle"})
+            "bid": forms.TextInput(),
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
@@ -72,4 +75,6 @@ class PlaceBidForm(forms.ModelForm):
                 css
             )
             self.fields[str(field)].label = ""
+
+    
 

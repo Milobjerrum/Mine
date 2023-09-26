@@ -49,8 +49,8 @@ class Comments(models.Model):
     """All commens relates to the user who created it and to an item"""
     id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=200)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="user_comment")
-    item = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name="item_comment")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comment")
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_comment")
     date_comment = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -59,10 +59,10 @@ class Comments(models.Model):
 class Bids(models.Model):
     """Each bid is saved with its own id"""
     id = models.AutoField(primary_key=True)
-    bid = models.DecimalField(max_digits=9, decimal_places=2, default="0")
-    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="bids_user")
-    item = models.ForeignKey(Listing, blank=True, null=True, on_delete=models.CASCADE, related_name="item_bid")
+    bid = models.DecimalField(max_digits=9, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids_user")
+    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_bid")
     date_bid = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"${self.bid}"
+        return f"{self.user}: ${self.bid}"

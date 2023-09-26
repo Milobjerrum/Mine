@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.db.models import Max
 
 from .models import User, Listing, Comments, Bids
 from .forms import NewListingForm, CommentsForm, PlaceBidForm
@@ -88,7 +89,9 @@ def listing(request, pk):
     """see al detalies of each listing"""
     item = Listing.objects.get(pk=pk)
     user = request.user
-
+    bids = Bids.objects.filter(item_id=pk)
+    total_bids = len(bids)
+    highest_bid = bids.aggregate(Max("bid"))["bid__max"]
     if request.method == "POST":
         # Handling the comments
         if "comment_form" in request.POST:
@@ -111,21 +114,24 @@ def listing(request, pk):
                 item.add_to_watchlist(user)
             return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
         
-        if "bid_fomr" in request.POST:
-            # Get users input aka the comment
+        if "bid_form" in request.POST:
+            # Get users input aka the bid
             new_bid = PlaceBidForm(request.POST)
-            # Saving the comment with the user and item id's 
+            # Saving the bid with the user and item id's 
             if new_bid.is_valid():
                 new_bid.instance.user = request.user
                 new_bid.instance.item_id = pk
                 new_bid.save()
                 return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
 
+
     # Handling page view, and adds item informatin, comments, and the watching button
     return render(request, "auctions/listing.html", {
         "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
+        "total_bids": total_bids,
+        "highest_bid": highest_bid,
         "new_bid": PlaceBidForm(),
         "watching": item.is_watching(user),
     })

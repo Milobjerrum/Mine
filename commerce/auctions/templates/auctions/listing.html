@@ -20,11 +20,24 @@
         <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
         <div class="card-body">
             <h5 class="card-title">{{ item.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondaty">${{ item.seller }}</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondaty">{{ item.seller }}</h6>
             <p class="card-text">{{ item.description }}</p>
         </div>
+        <div class="show_bids">
+            <div>
+                {% if total_bids %}
+                {{ total_bids }} Bid(s)
+                {% endif %}
+                Highest bid is: ${{ highest_bid }}
+            </div>
+            <div>
+                {% for bid in bids %}
+                <p> {{ bid }}</p>
+                {% endfor %}
+            </div>
+        </div>
         <div class="form-group">
-            <form action="{% url 'listing' item.pk %}", method="post">
+            <form action="{% url 'listing' item.pk %}" method="post">
                 <input type="hidden" name="bid_form"> 
                 {% csrf_token %}
                 {{ new_bid }}
@@ -42,7 +55,7 @@
         {% endfor %}
     </div>
     <div class="form-group">
-        <form action="{% url 'listing' item.pk %}", method="post">
+        <form action="{% url 'listing' item.pk %}" method="post">
             <input type="hidden" name="comment_form"> 
             {% csrf_token %}
             {{ new_comment }}
