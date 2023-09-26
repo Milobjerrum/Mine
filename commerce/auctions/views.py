@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Listing, Comments
@@ -11,12 +11,14 @@ from .forms import NewListingForm, CommentsForm
 
 
 def index(request):
+    """Index side, show all aktive listings"""
     return render(request, "auctions/index.html", {
         "items": Listing.objects.all()
     })
 
 
 def login_view(request):
+    """login"""
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -37,11 +39,13 @@ def login_view(request):
 
 
 def logout_view(request):
+    """logout"""
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 def register(request):
+    """regester new user"""
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -114,8 +118,15 @@ def categories(request):
 @login_required
 def watchlist(request):
     """View alle items the user have on their watchlist"""
+    if request.method == "POST":
+        item = Listing.objects.get(pk=request.POST["item_id"])
+        user = request.user
+        # the user is watching an item showed on the watchlist if kickted remove from list
+        item.remove_from_watchlist(user)
+        return HttpResponseRedirect(reverse("watchlist"))
+
     return render(request, "auctions/watchlist.html", {
-    "items": Listing.objects.filter(watch=request.user)
+    "items": Listing.objects.filter(watch=request.user),
     })
 
 
@@ -133,4 +144,3 @@ def create(request):
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
     })
-
