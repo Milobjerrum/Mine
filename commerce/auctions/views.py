@@ -9,7 +9,6 @@ from .models import User, Listing, Comments
 from .forms import NewListingForm, CommentsForm
 
 
-
 def index(request):
     """Index side, show all aktive listings"""
     user = request.user
@@ -89,7 +88,6 @@ def listing(request, pk):
     """see al detalies of each listing"""
     item = Listing.objects.get(pk=pk)
     user = request.user
-
 
     if request.method == "POST":
         # Handling the comments
