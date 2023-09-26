@@ -1,5 +1,5 @@
 from django import forms
-from .models import Listing, Comments
+from .models import Listing, Comments, Bids
 
 
 class NewListingForm(forms.ModelForm):
@@ -10,15 +10,26 @@ class NewListingForm(forms.ModelForm):
             "title", 
             "description", 
             "image", 
-            "price"
         ]
-
+        
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control", "placeholder": "Give your listing a title"}),
-            "description": forms.Textarea(attrs={"class": "form-control", "placeholder": "Write a description"}), 
-            "image": forms.TextInput(attrs={"class": "form-control", "placeholder": "Add a image URL "}), 
-            "price": forms.TextInput(attrs={"class": "form-control", "placeholder": "Starting price "}), 
+            "title": forms.TextInput(),
+            "description": forms.Textarea(),
+            "image": forms.TextInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            css = {
+                "placeholder": f"{str(field).title()}",
+                "class": "form-control"
+            }
+            self.fields[str(field)].widget.attrs.update(
+                css
+            ) 
+            self.fields[str(field)].label = ""
+
 
 class CommentsForm(forms.ModelForm):
     """Comments on items"""
@@ -27,5 +38,38 @@ class CommentsForm(forms.ModelForm):
         fields = ["comment"]
 
         widgets = {
-            "comment": forms.TextInput(attrs={"class": "form-controle", "placeholder": "Be nice"}),
+            "comment": forms.TextInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            css = {
+                "placeholder": f"{str(field).title()}",
+                "class": "form-control"
+        }
+            self.fields[str(field)].widget.attrs.update(
+                css
+            )
+            self.fields[str(field)].label = ""
+
+class PlaceBidForm(forms.ModelForm):
+    """Place bids"""
+    class Meta:
+        model = Bids
+        fields = ["bid"]
+        widgets = {
+            "bid": forms.NumberInput(attrs={"class": "form-controle"})
+        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            css = {
+                "placeholder": f"{str(field).title()}",
+                "class": "form-control"
+        }
+            self.fields[str(field)].widget.attrs.update(
+                css
+            )
+            self.fields[str(field)].label = ""
+

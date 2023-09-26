@@ -5,8 +5,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listing, Comments
-from .forms import NewListingForm, CommentsForm
+from .models import User, Listing, Comments, Bids
+from .forms import NewListingForm, CommentsForm, PlaceBidForm
 
 
 def index(request):
@@ -110,12 +110,23 @@ def listing(request, pk):
                 # User is not watching, add user to the watchlist
                 item.add_to_watchlist(user)
             return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
+        
+        if "bid_fomr" in request.POST:
+            # Get users input aka the comment
+            new_bid = PlaceBidForm(request.POST)
+            # Saving the comment with the user and item id's 
+            if new_bid.is_valid():
+                new_bid.instance.user = request.user
+                new_bid.instance.item_id = pk
+                new_bid.save()
+                return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
 
     # Handling page view, and adds item informatin, comments, and the watching button
     return render(request, "auctions/listing.html", {
         "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
+        "new_bid": PlaceBidForm(),
         "watching": item.is_watching(user),
     })
 
@@ -153,4 +164,10 @@ def create(request):
 
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
+    })
+
+
+def bids(request):
+    return render(request, "auctions/bids.html", {
+        "bids": Bids.objects.all()
     })
