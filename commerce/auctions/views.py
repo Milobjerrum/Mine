@@ -12,6 +12,18 @@ from .forms import NewListingForm, CommentsForm
 
 def index(request):
     """Index side, show all aktive listings"""
+    user = request.user
+    if request.method == "POST":
+        key = request.POST["item_id"]
+        current = Listing.objects.get(pk=key)
+    # the user is alredy watching when klicking then remove the user form the watchlist
+        if current.is_watching(user):
+            current.remove_from_watchlist(user)
+        else:
+        # User is not watching, add user to the watchlist
+            current.add_to_watchlist(user)
+        return HttpResponseRedirect(reverse("index"))
+    
     return render(request, "auctions/index.html", {
         "items": Listing.objects.all()
     })

@@ -30,7 +30,7 @@ class Listing(models.Model):
 
     
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.title}" f"{self.watch}"
     
     def is_watching(self, user):
         """ retruns true if the user is watching the listing (item)"""
