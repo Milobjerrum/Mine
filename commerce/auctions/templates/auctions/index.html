@@ -19,9 +19,9 @@
                 <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ item.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondaty">{{ item.seller }}</h6>
+                    <h6 class="card-subtitle mb-2 text-body-secondaty">Current Price:</h6>
                     <p class="card-text">{{ item.description }}</p>
-                    <a href="{% url 'listing' item.pk %}" class="btn btn-primary btn-sm"> Details </a>
+                    <a href="{% url 'listing' item.pk %}" class="card-link"> Details </a>
                 </div>
             </div>
         {% endfor %}

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from decimal import Decimal
 
 
 class User(AbstractUser):
@@ -66,3 +67,10 @@ class Bids(models.Model):
 
     def __str__(self):
         return f"{self.user}: ${self.bid}"
+    
+    def total_bids(item_id):
+        return len(Bids.objects.filter(item_id=item_id))
+    
+    def highest_bid(item_id):
+        result = Bids.objects.filter(item_id=item_id).aggregate(models.Max("bid"))["bid__max"]
+        return Decimal(result) if result is not None else 0.0

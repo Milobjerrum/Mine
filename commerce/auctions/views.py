@@ -4,15 +4,17 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from django.db.models import Max
+#from django.db.models import Max
 
-from .models import User, Listing, Comments, Bids
+from .models import User, Listing, Comments, Bids, Category
 from .forms import NewListingForm, CommentsForm, PlaceBidForm
 
 
 def index(request):
     """Index side, show all aktive listings"""
     user = request.user
+    items = Listing.objects.all()
+
     if request.method == "POST":
         key = request.POST["item_id"]
         current = Listing.objects.get(pk=key)
@@ -25,7 +27,7 @@ def index(request):
         return HttpResponseRedirect(reverse("index"))
     
     return render(request, "auctions/index.html", {
-        "items": Listing.objects.all()
+        "items": items,
     })
 
 
@@ -89,9 +91,8 @@ def listing(request, pk):
     """see al detalies of each listing"""
     item = Listing.objects.get(pk=pk)
     user = request.user
-    bids = Bids.objects.filter(item_id=pk)
-    total_bids = len(bids)
-    highest_bid = bids.aggregate(Max("bid"))["bid__max"]
+    message = None
+
     if request.method == "POST":
         # Handling the comments
         if "comment_form" in request.POST:
@@ -117,29 +118,36 @@ def listing(request, pk):
         if "bid_form" in request.POST:
             # Get users input aka the bid
             new_bid = PlaceBidForm(request.POST)
+            new_bid.instance.user = request.user
+            new_bid.instance.item_id = pk
             # Saving the bid with the user and item id's 
+
             if new_bid.is_valid():
-                new_bid.instance.user = request.user
-                new_bid.instance.item_id = pk
                 new_bid.save()
-                return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
-
-
-    # Handling page view, and adds item informatin, comments, and the watching button
-    return render(request, "auctions/listing.html", {
+                message = "Your bid is placed!"
+                
+            else:
+                message = "Your bid must be higher then the highest bid!"
+        
+    context = {
+        "message": message,
         "item": item,
         "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
-        "total_bids": total_bids,
-        "highest_bid": highest_bid,
+        "total_bids": Bids.total_bids(pk),
+        "highest_bid": Bids.highest_bid(pk),
         "new_bid": PlaceBidForm(),
         "watching": item.is_watching(user),
-    })
+    }
+    # Handling page view, and adds item informatin, comments, and the watching button
+    return render(request, "auctions/listing.html", context)
 
 
-@login_required
 def categories(request):
-    return render(request, "auctions/categories.html")
+    return render(request, "auctions/categories.html", {
+        "categories": Category.objects.all(),
+        "items": Listing.objects.all()
+    })
 
 
 @login_required
@@ -173,7 +181,7 @@ def create(request):
     })
 
 
-def bids(request):
-    return render(request, "auctions/bids.html", {
-        "bids": Bids.objects.all()
-    })
+# def bids(request):
+#     return render(request, "auctions/bids.html", {
+#         "bids": Bids.objects.all()
+#     })

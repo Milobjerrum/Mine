@@ -20,8 +20,9 @@
         <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
         <div class="card-body">
             <h5 class="card-title">{{ item.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondaty">{{ item.seller }}</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondaty">Listed by: {{ item.seller }}</h6>
             <p class="card-text">{{ item.description }}</p>
+            <p class="card-text"> category: {%if item.category %}{{ item.category }} {% else %} no category listed {% endif %}</p>
         </div>
         <div class="show_bids">
             <div>
@@ -30,16 +31,14 @@
                 {% endif %}
                 Highest bid is: ${{ highest_bid }}
             </div>
-            <div>
-                {% for bid in bids %}
-                <p> {{ bid }}</p>
-                {% endfor %}
-            </div>
         </div>
         <div class="form-group">
             <form action="{% url 'listing' item.pk %}" method="post">
                 <input type="hidden" name="bid_form"> 
                 {% csrf_token %}
+                {% if message %}
+                <h3 class="danger">{{ message }}</h3> 
+                {% endif %}
                 {{ new_bid }}
                 <button type="submit" class="btn btn-primary">Bid</button>
             </form>

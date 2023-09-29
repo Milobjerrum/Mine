@@ -3,4 +3,24 @@
 {% block title %} Categories {% endblock %}
 
 {% block body %}
+{% for category in categories %}
+    <h1>{{ category }}</h1>
+    <p class="d-inline-flex gap-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#{{ category }}" aria-expanded="false" aria-controls="{{ category }}">
+          {{ category }}
+        </button>
+      </p>
+      <div class="collapse" id="{{ category }}">
+        <div class="card card-body">
+        <ul>
+            {% for item in items %}
+                {% if item.category == category %}
+                <li>{{ item.title }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        </div>
+      </div>
+
+{% endfor %}
 {% endblock %}
