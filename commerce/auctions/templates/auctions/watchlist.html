@@ -7,21 +7,17 @@
 <div class="row mx-3">
     {% for item in items %}
         <div class="card" style="width: 18rem;">
-            <div>
                 <form action="{% url 'watchlist' %}", method="post">
                     {% csrf_token %}
                     <input type="hidden" name="watch_form">
                     <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
                 </form>
-            </div>
-            <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ item.title }}</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondaty">listed by:{{ item.seller }}</h6>
-                <p class="card-text">{{ item.description }}</p>
-                <a href="{% url 'listing' item.pk %}" class="btn btn-primary btn-sm"> Detalies </a>
-            </div>
-            </div>
+                <h2 class="card-title">{{ item.title }}</h2>
+                <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
+                <div class="card-body">
+                    <p class="card-text">{{ item.description }}</p>
+                    <a href="{% url 'listing' item.pk %}" class="card-link">Details</a>
+                </div>
     {% endfor %}
 </div>
 {% endblock %}

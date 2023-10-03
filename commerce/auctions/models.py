@@ -24,10 +24,13 @@ class Listing(models.Model):
     description = models.CharField(max_length=300, blank=True)
     image = models.CharField(max_length=200, blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="seller")
-    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.CASCADE, related_name="category")
+    category = models.ForeignKey(Category, blank=True, null=True, on_delete=models.PROTECT, related_name="category")
     date_created = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     watch = models.ManyToManyField(User, blank=True, related_name="watchlist")
+    starting_price = models.FloatField(blank=True, default=0)
+    current_bid = models.FloatField(blank=True, default=0)
+    buyer = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.title}" f"{self.watch}"
@@ -51,26 +54,20 @@ class Comments(models.Model):
     id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comment")
-    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_comment")
+    item = models.ForeignKey(Listing, blank=True, default=0, on_delete=models.CASCADE, related_name="item_comment")
     date_comment = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.user}: {self.comment}"
 
+
 class Bids(models.Model):
     """Each bid is saved with its own id"""
     id = models.AutoField(primary_key=True)
-    bid = models.DecimalField(max_digits=9, decimal_places=2)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids_user")
-    item = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="item_bid")
+    bid = models.FloatField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_user")
+    item = models.ForeignKey(Listing, blank=True, default=0, on_delete=models.CASCADE, related_name="item_bids")
     date_bid = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return f"{self.user}: ${self.bid}"
     
     def total_bids(item_id):
         return len(Bids.objects.filter(item_id=item_id))
-    
-    def highest_bid(item_id):
-        result = Bids.objects.filter(item_id=item_id).aggregate(models.Max("bid"))["bid__max"]
-        return Decimal(result) if result is not None else 0.0

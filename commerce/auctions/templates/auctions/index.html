@@ -6,22 +6,23 @@
         {% for item in items %}
             <div class="card" style="width: 18rem;">
                 {% if user.is_authenticated %}
-                <form action="{% url 'index' %}", method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="watch_form">
-                    {% if user in item.watch.all  %}
-                    <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-danger btn-sm">Watching</button>
-                    {% else %}
-                    <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-primary btn-sm">Watch</button>
-                    {% endif %}
-                </form>
+                <fieldset class="watchlist-btn">
+                    <form action="{% url 'index' %}", method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="watch_form">
+                        {% if user in item.watch.all  %}
+                        <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-danger btn-sm">Watching</button>
+                        {% else %}
+                        <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-primary btn-sm">Watch</button>
+                        {% endif %}
+                    </form>
+                </fieldset>
                 {% endif %}
+                <h2 class="card-title">{{ item.title }}</h2>
                 <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{ item.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-body-secondaty">Current Price:</h6>
                     <p class="card-text">{{ item.description }}</p>
-                    <a href="{% url 'listing' item.pk %}" class="card-link"> Details </a>
+                    <a href="{% url 'listing' item.pk %}" class="card-link">Details</a>
                 </div>
             </div>
         {% endfor %}

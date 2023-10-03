@@ -12,13 +12,15 @@ class NewListingForm(forms.ModelForm):
             "title", 
             "description", 
             "image", 
-            "category",        ]
+            "category",
+            "starting_price"        ]
         
         widgets = {
             "title": forms.TextInput(),
             "description": forms.Textarea(),
             "image": forms.TextInput(),
             "category": forms.Select(),
+            "starting_price": forms.TextInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -31,7 +33,6 @@ class NewListingForm(forms.ModelForm):
             self.fields[str(field)].widget.attrs.update(
                 css
             ) 
-            self.fields[str(field)].label = ""
 
 
 class CommentsForm(forms.ModelForm):
@@ -63,7 +64,7 @@ class PlaceBidForm(forms.ModelForm):
         fields = ["bid"]
 
         widgets = {
-            "bid": forms.TextInput(),
+            "bid": forms.NumberInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -78,15 +79,4 @@ class PlaceBidForm(forms.ModelForm):
             )
             self.fields[str(field)].label = ""
 
-    def clean_bid(self):
-        super().clean()
-        bid = self.cleaned_data.get("bid")
-        item_id = self.instance.item_id #Get the item id associated with the bid
-
-        # Check if the bid is higher than the current highest bid
-        highest_bid = Bids.highest_bid(item_id)
-        if bid <= highest_bid:
-            raise forms.ValidationError("")
-        
-        return bid
 

@@ -11,16 +11,21 @@
         </button>
       </p>
       <div class="collapse" id="{{ category }}">
-        <div class="card card-body">
-        <ul>
-            {% for item in items %}
-                {% if item.category == category %}
-                <li>{{ item.title }}</li>
-                {% endif %}
-            {% endfor %}
-        </ul>
+        <div class="category-view">
+          {% for item in items %}
+              {% if item.category == category %}
+              <a class="all-card-link" href="{% url 'listing' item.pk %}">
+                <div class="card" style="width: 8rem;">
+                  <h5 class="card-titel">{{ item.title }}</h5>
+                  <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
+                  <div class="card-body">
+                  <p class="card-text">{{ item.description }}</p>
+                  </div>
+                </div>
+                </a>
+              {% endif %}
+          {% endfor %}
         </div>
       </div>
-
 {% endfor %}
 {% endblock %}

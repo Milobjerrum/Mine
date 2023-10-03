@@ -100,7 +100,7 @@ def listing(request, pk):
             new_comment = CommentsForm(request.POST)
             # Saving the comment with the user and item id's 
             if new_comment.is_valid():
-                new_comment.instance.user = request.user
+                new_comment.instance.user = user
                 new_comment.instance.item_id = pk
                 new_comment.save()
                 return HttpResponseRedirect(reverse("listing", args=[str(pk)]))
@@ -117,30 +117,37 @@ def listing(request, pk):
         
         if "bid_form" in request.POST:
             # Get users input aka the bid
-            new_bid = PlaceBidForm(request.POST)
-            new_bid.instance.user = request.user
-            new_bid.instance.item_id = pk
-            # Saving the bid with the user and item id's 
-
-            if new_bid.is_valid():
+            offer = float(request.POST["bid"])
+            if valid_bid(offer, item):
+                item.current_bid = offer
+                form = PlaceBidForm(request.POST)
+                new_bid = form.save(commit=False)
+                new_bid.user = user
+                new_bid.item = item
                 new_bid.save()
-                message = "Your bid is placed!"
-                
+                item.save()
+                message = "Succes your bid:"
             else:
-                message = "Your bid must be higher then the highest bid!"
+                message = "Your bid has to be more than: "
         
     context = {
         "message": message,
         "item": item,
-        "comments": Comments.objects.filter(item_id=pk),
         "new_comment": CommentsForm(),
-        "total_bids": Bids.total_bids(pk),
-        "highest_bid": Bids.highest_bid(pk),
         "new_bid": PlaceBidForm(),
         "watching": item.is_watching(user),
+        "comments": item.item_comment.all(),
+        "total_bids": Bids.total_bids(item.id)
     }
     # Handling page view, and adds item informatin, comments, and the watching button
     return render(request, "auctions/listing.html", context)
+
+
+def valid_bid(offer, item):
+    if offer >= item.starting_price and (item.current_bid is None or offer > item.current_bid):
+        return True
+    else: 
+        return False
 
 
 def categories(request):
@@ -179,9 +186,3 @@ def create(request):
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
     })
-
-
-# def bids(request):
-#     return render(request, "auctions/bids.html", {
-#         "bids": Bids.objects.all()
-#     })
