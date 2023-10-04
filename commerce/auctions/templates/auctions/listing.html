@@ -4,14 +4,17 @@
 
 {% block body %}
 <div class="card" style="width: 30rem;">
-    <div class="watchlist-btn">
+    <div class="btn-group" style="width: 10rem;">
+    {% if user == item.seller and item.is_active %}
+        <a href="{% url 'close' item.pk %}" class="btn btn-danger">close</a>
+    {% endif %}
         <form action="{% url 'listing' item.pk %}", method="post">
             {% csrf_token %}
             <input type="hidden" name="watch_form">
             {% if watching %}
-            <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
+            <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-warning">Watching</button>
             {% else %}
-            <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-primary btn-sm">Watch</button>
+            <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-primary">Watch</button>
             {% endif %}
         </form>
     </div>

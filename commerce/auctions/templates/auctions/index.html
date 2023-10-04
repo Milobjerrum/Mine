@@ -4,6 +4,7 @@
     <h2>Active Listings</h2>
     <div class="row mx-3">
         {% for item in items %}
+        {% if item.is_active %}
             <div class="card" style="width: 18rem;">
                 {% if user.is_authenticated %}
                 <fieldset class="watchlist-btn">
@@ -25,6 +26,7 @@
                     <a href="{% url 'listing' item.pk %}" class="card-link">Details</a>
                 </div>
             </div>
+        {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

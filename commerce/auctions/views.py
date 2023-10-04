@@ -120,6 +120,7 @@ def listing(request, pk):
             offer = float(request.POST["bid"])
             if valid_bid(offer, item):
                 item.current_bid = offer
+                item.buyer = user
                 form = PlaceBidForm(request.POST)
                 new_bid = form.save(commit=False)
                 new_bid.user = user
@@ -185,4 +186,27 @@ def create(request):
 
     return render(request, "auctions/create.html", {
         "form": NewListingForm()
+    })
+
+@login_required
+def close(request, pk):
+    """ User who is seller of listing can close the auction"""
+    message = None
+    item = Listing.objects.get(pk=pk)
+    user = request.user
+
+    if request.method == "POST":
+        if item.seller == user:
+            item.is_active = False
+            item.save()
+            message = "Congratulations your listing is closed"
+        else: 
+            message = "Unauthorized usage"
+
+    
+    return render(request, "auctions/close.html", {
+        "item": item,
+        "total_bids": Bids.total_bids(item.id),
+        "message": message,
+
     })
