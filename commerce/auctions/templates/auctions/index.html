@@ -2,31 +2,25 @@
 
 {% block body %}
     <h2>Active Listings</h2>
-    <div class="row mx-3">
         {% for item in items %}
         {% if item.is_active %}
-            <div class="card" style="width: 18rem;">
-                {% if user.is_authenticated %}
-                <fieldset class="watchlist-btn">
-                    <form action="{% url 'index' %}", method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="watch_form">
-                        {% if user in item.watch.all  %}
-                        <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-danger btn-sm">Watching</button>
-                        {% else %}
-                        <button type="submit" name="item_id" value="{{ item.id }}" class=" btn btn-primary btn-sm">Watch</button>
-                        {% endif %}
-                    </form>
-                </fieldset>
-                {% endif %}
-                <h2 class="card-title">{{ item.title }}</h2>
-                <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
+        <a class="full-card-link" href="{% url 'listing' item.pk %}">
+        <div class="card mb-3 fulllink" style="max-width: 900px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+              </div>
+              <div class="col-md-8">
                 <div class="card-body">
-                    <p class="card-text">{{ item.description }}</p>
-                    <a href="{% url 'listing' item.pk %}" class="card-link">Details</a>
+                  <h5 class="card-title">{{ item.title }}</h5>
+                  <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
+                  <p class="card-text">{{ item.description }}</p>
+                  <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
                 </div>
+              </div>
             </div>
+          </div>
+        </a>
         {% endif %}
         {% endfor %}
-    </div>
 {% endblock %}

@@ -1,0 +1,99 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %} My auction {% endblock %}
+
+{% block body %}
+<div class="Selling">
+    <h2> My active listings </h2>
+    {% for item in items %}
+    {% if item.seller == user %}
+    {% if item.is_active %}
+    <a class="full-card-link" href="{% url 'listing' item.pk %}">
+    <div class="card mb-3 fulllink" style="max-width: 900px;">
+        {% if not item.is_active %}
+        <div class="ribbon">
+            <span>Closed</span>
+        </div>
+        {% endif %}
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
+              <p class="card-text">{{ item.description }}</p>
+              <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>
+<div class="buying">
+    <h2> Won listings </h2>
+    {% if not item.is_active and item.buyer == user %}
+    {% for item in items %}
+    <a class="full-card-link" href="{% url 'listing' item.pk %}">
+    <div class="card mb-3 fulllink" style="max-width: 900px;">
+        <div class="congratulations">
+            <h1> congratulations</h1>
+            <h5>Your bid at ${{ item.current_bid }} won this auction!</h5>
+        </div>
+        <div class="ribbon">
+            <span>Closed</span>
+        </div>
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.title }}</h5>
+              <h6 class="card-subtitle">Price: ${{ item.current_bid }}</h6>
+              <p class="card-text">{{ item.description }}</p>
+              <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+    {% endif %}
+
+
+</div>
+<div class="sold">
+  <h2>Sold items</h2>
+{% for item in items %}
+{% if item.seller == user %}
+{% if not item.is_active %}
+<a class="full-card-link" href="{% url 'listing' item.pk %}">
+<div class="card mb-3 fulllink" style="max-width: 500px;">
+    <div class="ribbon">
+        <span>Closed</span>
+    </div>
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ item.title }}</h5>
+          <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
+          <p class="card-text">{{ item.description }}</p>
+          <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+{% endif %}
+{% endif %}
+{% endfor %}
+</div>
+{% endblock%}

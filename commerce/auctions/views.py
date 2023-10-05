@@ -86,7 +86,6 @@ def register(request):
         return render(request, "auctions/register.html")
     
 
-@login_required
 def listing(request, pk):
     """see al detalies of each listing"""
     item = Listing.objects.get(pk=pk)
@@ -209,4 +208,10 @@ def close(request, pk):
         "total_bids": Bids.total_bids(item.id),
         "message": message,
 
+    })
+
+@login_required
+def myacutions(request):
+    return render(request, "auctions/myauction.html", {
+        "items": Listing.objects.all()
     })

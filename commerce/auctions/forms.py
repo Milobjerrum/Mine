@@ -14,25 +14,24 @@ class NewListingForm(forms.ModelForm):
             "image", 
             "category",
             "starting_price"        ]
-        
-        widgets = {
-            "title": forms.TextInput(),
-            "description": forms.Textarea(),
-            "image": forms.TextInput(),
-            "category": forms.Select(),
-            "starting_price": forms.TextInput(),
-        }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for field in self.fields:
-            css = {
-                "placeholder": f"{str(field).title()}",
-                "class": "form-control"
-            }
-            self.fields[str(field)].widget.attrs.update(
-                css
-            ) 
+        self.fields["title"].widget = forms.TextInput(attrs={
+            "class": "form-control", "placeholder": "Listing title"
+        })
+        self.fields["description"].widget = forms.Textarea(attrs={
+            "class": "form-control", "placeholder": "Give the listing a description"
+        })
+        self.fields["image"].widget = forms.TextInput(attrs={
+            "class": "form-control", "placeholder": "image url"
+        })
+
+        self.fields["starting_price"].widget = forms.TextInput(attrs={
+            "class": "form-control",
+        })
+            
 
 
 class CommentsForm(forms.ModelForm):

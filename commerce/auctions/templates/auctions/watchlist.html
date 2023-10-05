@@ -4,20 +4,30 @@
 
 {% block body %}
 <h2>Wathclist</h2>
-<div class="row mx-3">
     {% for item in items %}
-        <div class="card" style="width: 18rem;">
-                <form action="{% url 'watchlist' %}", method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="watch_form">
-                    <button type="submit", name="item_id", value="{{ item.id }}", class=" btn btn-danger btn-sm">Watching</button>
-                </form>
-                <h2 class="card-title">{{ item.title }}</h2>
-                <img src="{{ item.image }}" class="card-img-top" alt="{{ item.title }}">
-                <div class="card-body">
-                    <p class="card-text">{{ item.description }}</p>
-                    <a href="{% url 'listing' item.pk %}" class="card-link">Details</a>
+    {% if item.is_active %}
+        <a class="full-card-link" href="{% url 'listing' item.pk %}">
+            <div class="card mb-3 fulllink" style="max-width: 900px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                    <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+                    </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
+                        <p class="card-text">{{ item.description }}</p>
+                        <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
+                        <form action="{% url 'watchlist' %}", method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="watch_form">
+                            <button type="submit", name="item_id", value="{{ item.id }}", class="btn btn-warning btn-sm">Remove from watchlist</button>
+                        </form>
+                    </div>
+                    </div>
                 </div>
+            </div>
+            </a>
+    {% endif %}
     {% endfor %}
-</div>
 {% endblock %}
