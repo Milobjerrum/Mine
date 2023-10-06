@@ -30,7 +30,7 @@ class Listing(models.Model):
     watch = models.ManyToManyField(User, blank=True, related_name="watchlist")
     starting_price = models.FloatField(blank=True, default=0)
     current_bid = models.FloatField(blank=True, default=0)
-    buyer = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    buyer = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.title}" f"{self.watch}"

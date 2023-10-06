@@ -3,41 +3,45 @@
 {% block title %} Categories {% endblock %}
 
 {% block body %}
-{% for category in categories %}
-    <p class="d-inline-flex">
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#{{ category }}" aria-expanded="false" aria-controls="{{ category }}">
-          {{ category }}
-        </button>
-      </p>
-      <div class="collapse" id="{{ category }}">
-        <div class="category-view">
-          {% for item in items %}
-              {% if item.category == category and item.is_active %}
-              <a class="full-card-link" href="{% url 'listing' item.pk %}">
-                <div class="card mb-3 fulllink" style="max-width: 900px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                        <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
-                        </div>
-                        <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ item.title }}</h5>
-                            <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
-                            <p class="card-text">{{ item.description }}</p>
-                            <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
-                            <form action="{% url 'watchlist' %}", method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="watch_form">
-                                <button type="submit", name="item_id", value="{{ item.id }}", class="btn btn-warning btn-sm">Remove from watchlist</button>
-                            </form>
-                        </div>
-                        </div>
-                    </div>
+<nav>
+<ul class="nav justify-content-center nav-pills mb-3" id="pills-tab" role="tablist">
+  {% for category in categories %}
+  <li class="nav-item ml-4 mr-4" role="presentation">
+    <button class="btn btn-primary nav-link" id="pills-{{ category }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ category }}" type="button" role="tab" aria-controls="pills-{{ category }}" aria-selected="false">{{ category }}</button>
+  </li>
+  {% endfor %}
+</ul>
+</nav>
+<div class="tab-content" id="pills-tabContent">
+  {% for category in categories %}
+  <div class="tab-pane" id="pills-{{ category }}" role="tabpanel" aria-labelledby="pills-{{ category }}-tab" tabindex="0">
+    {% for item in items %}
+      {% if item.category == category and item.is_active %}
+      <a class="full-card-link" href="{% url 'listing' item.pk %}">
+        <div class="card mb-3 fulllink" style="max-width: 500px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.title }}</h5>
+                  <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
+                  <p class="card-text">{{ item.description }}</p>
+                  <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
                 </div>
-                </a>
-              {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-{% endfor %}
+              </div>
+            </div>
+          </div>
+        </a>
+      {% endif %}
+      {% endfor %}
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
+
+
+
+
+
