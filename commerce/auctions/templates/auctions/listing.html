@@ -5,49 +5,34 @@
 {% block body %}
 
     <!--- Listing view-->
-    <div class="card mb-3" style="max-width: 1000px;">
-        {% if user.is_authenticated %}
-        {% if not item.is_active %}
-        {% if user == item.buyer %}
-        <div class="congratulations">
-            <h1> congratulations</h1>
-            <h5>Your bid at ${{ item.current_bid }} won this auction!</h5>
-        </div>
-        {% endif %}
-        <div class="ribbon">
-            <span>Closed</span>
-        </div>
-        {% endif %}
-        {% endif %}
-        <div class="row g-0">
-          <div class="col-md-5">
-            <h1 class="card-title">Listing: {{ item.title }}</h1>
-            {% if item.is_active and user.is_authenticated %}
-            <div class="btn-group" style="width: 10rem;">
-                {% if user == item.seller %}
-                    <a href="{% url 'close' item.pk %}" class="btn btn-danger">close</a>
-                {% endif %}
-                <form action="{% url 'listing' item.pk %}", method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="watch_form">
-                    {% if watching %}
-                    <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-warning">Watching</button>
-                    {% else %}
-                    <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-primary">Watch</button>
-                    {% endif %}
-                </form>
-            </div>
-            {% endif %}
+<div class="box">
 
-            <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <p class="card-text">{{ item.description }}</p>
-              <h5 class="card-subtitle">{% if item.current_bid %}${{ item.current_bid }}{% else %}Starting price: ${{ item.starting_price }}{% endif %}</h5>
-              <p class="card-text"><small class="text-body-secondary">{% if total_bids %}{{ total_bids }} bid(s) so far{% else %}No bids{% endif %}</small></p>
-              {% if item.is_active  and user.is_authenticated %}
-              <div class="form-group">
+<!-- closed auction, shouws closen and congrats to the winner-->
+{% if user.is_authenticated %}
+{% if not item.is_active %}
+{% if user == item.buyer %}
+<div class="congratulations">
+    <h1> congratulations</h1>
+    <h5>Your bid at ${{ item.current_bid }} won this auction!</h5>
+</div>
+{% endif %}
+<div class="ribbon">
+    <span>Closed</span>
+</div>
+{% endif %}
+{% endif %}
+
+    <div class="listing">
+        <div class="item-image">
+            <img src="{{ item.image }}" alt="{{ item.title }}">
+        </div>
+        <div class="item-detailes">
+            <div class="item-title">Listing: {{ item.title }}</div>
+            <div class="item-price">{% if item.current_bid %}${{ item.current_bid }}{% else %}Starting price: ${{ item.starting_price }}{% endif %}</div>
+            <p class="item-text">{{ item.description }}</p>
+            <div class="item-bids">{% if total_bids %}{{ total_bids }} bid(s) so far{% else %}No bids{% endif %}</div>
+            {% if item.is_active and user.is_authenticated %}
+            <div class="form-group bidding-form">
                 <form action="{% url 'listing' item.pk %}" method="post">
                     <input type="hidden" name="bid_form"> 
                     {% csrf_token %}
@@ -55,33 +40,48 @@
                     <br>
                     <button type="submit" class="btn btn-primary">Place Bid</button>
                 </form>
-                </div>
-                <h5 class="card-titel">Detailes:</h5 >
-                <ul>
-                    <li>Listed by: {{ item.seller }}</li>
-                    <li>category: {%if item.category %}{{ item.category }} {% else %} no category listed {% endif %}</li>
-                    <li>created: {{ item.date_created.date }}</li>
-                </ul>
-                <h5 class="card-titel">Comments:</h5 >
-                <ul class="list-group">
-                    {% for comment in comments %}
-                    <li class="list-group-item align-items-start">
-                        <div> <strong>{{ comment.user }}: </strong>{{ comment.comment }}</div></li>
-                    {% endfor %}
-                    <li class="list-group-item align-items-start">
-                        <form action="{% url 'listing' item.pk %}" method="post">
-                            <input type="hidden" name="comment_form"> 
-                                {% csrf_token %}
-                                {{ new_comment }}
-                                <br>
-                            <button type="submit" class="btn btn-primary">Post</button>
-                        </form>
-                    </li>
-                </ul>
-                {% endif %}
             </div>
-          </div>
-        </div>
-      </div>
+            {% endif %}
+            <div class="item-title">detailes:</div>
+            <ul>
+                <li>Listed by: {{ item.seller }}</li>
+                <li>category: {%if item.category %}{{ item.category }} {% else %} no category listed {% endif %}</li>
+                <li>created: {{ item.date_created.date }}</li>
+            </ul>
+<!--- buttons, watchlist and close -->
+{% if item.is_active and user.is_authenticated %}
+<div class="item-btn-group">
+    {% if user == item.seller %}
+        <a href="{% url 'close' item.pk %}" class="btn btn-danger">close</a>
+    {% endif %}
+    <form action="{% url 'listing' item.pk %}", method="post">
+        {% csrf_token %}
+        <input type="hidden" name="watch_form">
+        {% if watching %}
+        <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-warning">Watching</button>
+        {% else %}
+        <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-primary">Watch</button>
+        {% endif %}
+    </form>
 </div>
+</div> <!--- end of listings div-->
+{% endif %}
+    </div> <!-- end of item div-->
+    <div class="listing-comments">
+        <div class="item-title">Comments:</div>
+            {% for comment in comments %}
+            <p>
+                <div> <strong>{{ comment.user }}: </strong>{{ comment.comment }}</div>
+            </p>
+            {% endfor %}
+            <p>
+            <form action="{% url 'listing' item.pk %}" method="post">
+                <input type="hidden" name="comment_form"> 
+                    {% csrf_token %}
+                    {{ new_comment.as_p }}
+                    <br>
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+            </p>
+    </div>
 {% endblock %}

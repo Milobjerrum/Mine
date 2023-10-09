@@ -15,27 +15,25 @@
 <div class="tab-content" id="pills-tabContent">
   {% for category in categories %}
   <div class="tab-pane" id="pills-{{ category }}" role="tabpanel" aria-labelledby="pills-{{ category }}-tab" tabindex="0">
+    <div class="listings">   
     {% for item in items %}
       {% if item.category == category and item.is_active %}
       <a class="full-card-link" href="{% url 'listing' item.pk %}">
-        <div class="card mb-3 fulllink" style="max-width: 500px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="{{ item.image }}" class="img-fluid rounded-start" alt="{{ item.title }}">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">{{ item.title }}</h5>
-                  <h6 class="card-subtitle">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</h6>
-                  <p class="card-text">{{ item.description }}</p>
-                  <p class="card-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
-                </div>
-              </div>
+        <div class="listing-item">
+            <div class="item-img">
+              <img src="{{ item.image }}" alt="{{ item.title }}">
             </div>
-          </div>
+            <div class="item-detailes">
+              <div class="item-title">{{ item.title }}</div>
+              <div class="item-price">Price: ${% if item.current_bid %}{{ item.current_bid }}{% else %}{{ item.starting_price }}{% endif %}</div>
+                <p class="item-text">{{ item.description }}</p>
+                <p class="item-text"><small class="text-body-secondary">Created: {{ item.date_created.date }}</small></p>
+            </div>  
+        </div>
         </a>
       {% endif %}
       {% endfor %}
+    </div>
   </div>
   {% endfor %}
 </div>

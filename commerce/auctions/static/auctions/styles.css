@@ -1,0 +1,203 @@
+/* navigation and header */
+body {
+  padding: 2%;
+}
+
+
+.logo {
+  font-size: 70px;
+}
+
+.logo span:nth-child(1) {
+  color: rgb(159, 13, 13);
+}
+
+.logo span:nth-child(2) {
+  color: rgb(29, 29, 205);
+}
+.logo span:nth-child(3) {
+  color: rgb(198, 198, 18);
+}
+.logo span:nth-child(4) {
+  color: rgb(27, 200, 27);
+}
+
+.menu {
+  font-size: large;
+  text-transform: capitalize;
+}
+
+.userinfo {
+  font-size: larger;
+}
+
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.preview-item  {
+  display: grid;
+  grid-template-columns: 210px 570px;
+  grid-template-rows: 300px;
+  border: 1px solid black;
+  margin: 20px;
+  position: relative;
+}
+
+.item-img img {
+  height: 270px;
+  aspect-ratio: 3/4;
+  object-fit: contain;
+  margin-top: 5%;
+  border: 1px solid red;
+}
+
+.item-detailes {
+  text-align: left;
+  border: 1px solid red;
+  padding-top: 30px;
+  padding-left: 3%;
+  text-transform: capitalize;
+
+}
+
+.item-btn-group {
+  display: flex;
+  border: 1px solid red;
+  width: 20%;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  justify-content: end;
+  text-transform: capitalize;
+}
+
+.listing {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid black;
+  margin: 20px;
+  position: relative;
+  justify-content: center;
+  text-transform: capitalize;
+}
+
+.listing img {
+  height: 600px;
+}
+
+.listing .item-detailes {
+  width: 900px
+
+}
+
+.listing-comments {
+  border: 1px solid red;
+  min-width: 900px;
+  max-width: 1380px;
+  flex-grow: 1;
+}
+
+.item-title {
+  font-size: xx-large;
+  text-transform: capitalize;
+}
+
+.item-price {
+  font-size: larger;
+}
+
+.item-text {
+  font-size: medium;
+  text-transform: none;
+}
+
+
+.listing-item:hover {
+  color: black;
+  box-shadow: 1px 1px 8px hotpink;
+}
+
+.full-card-link:link {
+  text-decoration: none;
+  color: black;
+
+}
+.full-card-link:visited {
+  text-decoration: none;
+  color: black;
+
+}
+.full-card-link:hover {
+  text-decoration: none;
+  color: black;
+  text-shadow: 0.2px 0.2px 7px lightgray;
+}
+/* common */
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  display: block;
+  border: 5px solid darkred;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 15px 0;
+  background-color: red;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 700 18px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+  left: -25px;
+  top: 30px;
+  transform: rotate(45deg);
+}
+
+.congratulations {
+  width: 50%;
+  height: 30%;
+  padding: 5%;
+  text-align: center;
+  border-radius: 2px;
+  background-color: hsla(46, 97%, 55%, 0.9);
+  color: white;
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  top: 130px;
+  left: 200px;
+}
+
+.congratulations h1 {
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  padding: 10px;
+  font-size: x-large;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+}
